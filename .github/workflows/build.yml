@@ -1,0 +1,36 @@
+name: Code Build Workflow
+
+on:
+  workflow_run:
+    workflows:
+      - Sonar Code Review Workflow
+    types:
+      - completed
+
+jobs:
+  build:
+    name: Build
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker build and push
+        run: |
+          docker build -t astro-devops-project-2 .
+          docker tag astro-devops-project-2 kaustubm/astro-devops-project-2:latest
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push kaustubm/astro-devops-project-2:latest
+        env:
+          DOCKER_CLI_ACI: 1
+
+      # - name: Pull the Docker image On AWS EC2 For tetsing of website
+      #   run: docker pull react-aws-eks-github-actions:latest
+
+      - name: Stop and remove existing container
+        run: |
+          docker stop astro-devops-project-2 || true
+          docker rm astro-devops-project-2 || true
+
+      - name: Run the container on AWS EC2 for testing now
+        run: docker run -d --name astro-devops-project-2 -p 3000:3000 kaustubm/astro-devops-project-2:latest
