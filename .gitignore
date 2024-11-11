@@ -4,8 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-
-# testing
+infra/.terraform/
+infra/.terraform*# testing
 /coverage
 
 # production
@@ -23,7 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local .terraform directories
-/infra/.terraform
 
 
 # .tfstate files
@@ -60,4 +59,4 @@ terraform.rc
 
 aws-config.md
 
-terraform-eks/.terraform/*
+/project2/infra/.terraform/*
