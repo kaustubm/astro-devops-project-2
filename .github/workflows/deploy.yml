@@ -1,0 +1,35 @@
+name: Deploy To EKS
+
+on:
+  workflow_run:
+    workflows:
+      - Trivy Image Scan Workflow
+    types:
+      - completed
+
+jobs:
+  build:
+    name: Deploy To EKS
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Pull the Docker image
+        run: docker pull kaustubm/astro-devops-project-2:latest
+
+      - name: Update kubeconfig
+        run: aws eks --region ap-southeast-1 update-kubeconfig --name EKS_cluster_kaustubm
+
+      - name: Deploy to EKS
+        run: kubectl apply -f deployment-service.yml --validate=
+
+      - name: Send a Slack Notification
+        if: always()
+        uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: "#git"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

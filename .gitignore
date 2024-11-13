@@ -60,3 +60,5 @@ terraform.rc
 aws-config.md
 
 /project2/infra/.terraform/*
+
+
