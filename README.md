@@ -37,3 +37,9 @@ flowchart LR
 
     workflow -->|Status Updates| L[Slack Notifications]
 ```
+
+## Pipeline Success
+
+![image](./images/ec2-logs.png)
+
+![image](./images/slack-message.png)
